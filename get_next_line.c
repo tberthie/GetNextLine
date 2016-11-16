@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/17 00:14:08 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/17 00:34:34 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,5 @@ int			get_next_line(const int fd, char **line)
 	else
 		*save->buff[slot] = '\0';
 	*line = ft_strdup(tmp);
-	return (*save->buff[slot] ? 1 : 0);
+	return (*tmp ? 1 : 0);
 }
