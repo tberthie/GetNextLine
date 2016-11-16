@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/16 22:27:21 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/17 00:14:08 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,32 @@ int			get_next_line(const int fd, char **line)
 	static t_save	*save;
 	int				slot;
 	int				rd;
-	char			buff[BUFF_SIZE];
+	char			buff[BUFF_SIZE + 1];
 	char			*tmp;
 
-	if (!save && (!(save = malloc(sizeof(t_save*))) ||
-	(slot = create_save(save, fd)) == -1))
+	if ((!save && !(save = malloc(sizeof(t_save*)))) ||
+	(slot = create_save(save, fd)) == -1)
 		return (-1);
-	while ((rd = read(fd, buff, BUFF_SIZE)) &&
-	!ft_strchr(save->buff[slot], '\n'))
+	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
 		if (rd == -1 || !(tmp = ft_strnew(rd +
 		ft_strlen(save->buff[slot]))))
 			return (-1);
 		buff[rd] = '\0';
-		if (save->buff[slot])
+		if (*save->buff[slot])
 			tmp = ft_strcpy(tmp, save->buff[slot]);
-		tmp = ft_strdup(ft_strncat(tmp, buff, rd));
+		tmp = ft_strcat(tmp, buff);
+		save->buff[slot] = ft_strdup(tmp);
 	}
-	if (ft_strchr(tmp, '\n'))
-		*(ft_strchr(tmp, '\n')) = '\0';
-	*line = ft_strdup(tmp);
+	tmp = ft_strdup(save->buff[slot]);
 	if (ft_strchr(save->buff[slot], '\n'))
+	{
+		*ft_strchr(tmp, '\n') = '\0';
 		save->buff[slot] = ft_strcpy(save->buff[slot],
-		(ft_strchr(save->buff[slot], '\n')));
+		ft_strchr(save->buff[slot], '\n') + 1);
+	}
 	else
 		*save->buff[slot] = '\0';
-	free(tmp);
-	return (rd ? 0 : 1);
+	*line = ft_strdup(tmp);
+	return (*save->buff[slot] ? 1 : 0);
 }
