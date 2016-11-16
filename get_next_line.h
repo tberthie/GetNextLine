@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:51 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/16 19:21:26 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/16 21:27:30 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ typedef struct	s_save
 {
 	int		*fd;
 	int		size;
-	char	buff[BUFF_SIZE + 1];
+	char	**buff;
 }				t_save;
 
 int		get_next_line(const int fd, char **line);
