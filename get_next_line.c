@@ -6,72 +6,74 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/17 00:34:34 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/18 14:48:52 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft.h"
 
-static int	create_save(t_save *save, int fd)
-{
-	int		i;
-	char	**buff;
-	int		*fdt;
-	char	*new;
+#include <stdio.h>
 
-	i = save->size;
-	while (i--)
-		if (save->fd[i] == fd)
-			return (i);
-	if (!(buff = malloc(sizeof(char*) * (save->size + 1))) ||
-	!(fdt = malloc(sizeof(save->fd) + sizeof(int))) ||
-	!(new = ft_strnew(BUFF_SIZE)))
-		return (-1);
-	while (i++ < save->size - 1)
+static t_slot	*get_slot(t_slot *first, int fd)
+{
+	t_slot	*slot;
+
+	slot = first;
+	while (slot && slot->fd != fd)
+		slot = slot->next;
+	if (!slot)
 	{
-		if (!(buff[i] = ft_strdup(save->buff[i])))
-			return (-1);
-		fdt[i] = save->fd[i];
+		if (!(slot = malloc(sizeof(t_slot*))))
+			return (0);
+		slot->fd = fd;
+		slot->save = ft_strnew(0);
+		slot->next = NULL;
+		while (first && first->next)
+			first = first->next;
+		if (first)
+			first->next = slot;
 	}
-	buff[save->size] = new;
-	fdt[save->size] = fd;
-	save->fd = fdt;
-	save->buff = buff;
-	return (save->size++);
+	return (slot);
 }
 
-int			get_next_line(const int fd, char **line)
+static int		process_slot(t_slot *slot, char **line)
 {
-	static t_save	*save;
-	int				slot;
+	char	*tmp;
+
+	*line = "";
+	if (*(slot->save++) == '\n')
+		return (1);
+	slot->save--;
+	if (!(tmp = ft_strdup(slot->save)))
+		return (-1);
+	slot->save = ft_strchr(tmp, '\n') ? ft_strchr(slot->save, '\n') + 1 :
+	&(slot->save[ft_strlen(slot->save)]);
+	if (ft_strchr(tmp, '\n'))
+		*ft_strchr(tmp, '\n') = '\0';
+	if (!(*line = ft_strdup(tmp)))
+		return (-1);
+	return (*tmp ? 1 : 0);
+}
+
+int				get_next_line(const int fd, char **line)
+{
+	static t_slot	*first;
+	t_slot			*slot;
 	int				rd;
-	char			buff[BUFF_SIZE + 1];
+	char			buff[BUFF_SIZE];
 	char			*tmp;
 
-	if ((!save && !(save = malloc(sizeof(t_save*)))) ||
-	(slot = create_save(save, fd)) == -1)
+	if (!(slot = get_slot(first, fd)))
 		return (-1);
 	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
-		if (rd == -1 || !(tmp = ft_strnew(rd +
-		ft_strlen(save->buff[slot]))))
+		if (rd == -1 || !(tmp = ft_strnew(rd + ft_strlen(slot->save))))
 			return (-1);
-		buff[rd] = '\0';
-		if (*save->buff[slot])
-			tmp = ft_strcpy(tmp, save->buff[slot]);
-		tmp = ft_strcat(tmp, buff);
-		save->buff[slot] = ft_strdup(tmp);
+		first = first ? first : slot;
+		tmp = ft_strncat(ft_strcpy(tmp, slot->save), buff, rd);
+		slot->save = ft_strdup(tmp);
+		free(tmp);
 	}
-	tmp = ft_strdup(save->buff[slot]);
-	if (ft_strchr(save->buff[slot], '\n'))
-	{
-		*ft_strchr(tmp, '\n') = '\0';
-		save->buff[slot] = ft_strcpy(save->buff[slot],
-		ft_strchr(save->buff[slot], '\n') + 1);
-	}
-	else
-		*save->buff[slot] = '\0';
-	*line = ft_strdup(tmp);
-	return (*tmp ? 1 : 0);
+	return (process_slot(slot, line));
 }

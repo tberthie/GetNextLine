@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:51 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/16 21:27:30 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/18 13:55:40 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUFF_SIZE 32
+# define BUFF_SIZE 1
 
-typedef struct	s_save
+typedef struct	s_slot
 {
-	int		*fd;
-	int		size;
-	char	**buff;
-}				t_save;
+	int				fd;
+	char			*save;
+	struct s_slot	*next;
+}				t_slot;
 
-int		get_next_line(const int fd, char **line);
+int				get_next_line(const int fd, char **line);
 
 #endif
