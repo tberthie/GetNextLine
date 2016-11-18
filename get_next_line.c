@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/18 15:20:40 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/18 17:03:11 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int		process_slot(t_slot *slot, char **line)
 	&(slot->save[ft_strlen(slot->save)]);
 	if (ft_strchr(tmp, '\n'))
 		*ft_strchr(tmp, '\n') = '\0';
-	if (!line || !(*line = ft_strdup(tmp)))
+	if (!(*line = ft_strdup(tmp)))
 		return (-1);
 	return (*tmp ? 1 : 0);
 }
@@ -62,7 +62,7 @@ int				get_next_line(const int fd, char **line)
 	char			buff[BUFF_SIZE];
 	char			*tmp;
 
-	if (!(slot = get_slot(first, fd)))
+	if (!line || !(slot = get_slot(first, fd)))
 		return (-1);
 	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
