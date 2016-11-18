@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/18 14:48:52 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/18 15:03:15 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int		process_slot(t_slot *slot, char **line)
 	&(slot->save[ft_strlen(slot->save)]);
 	if (ft_strchr(tmp, '\n'))
 		*ft_strchr(tmp, '\n') = '\0';
-	if (!(*line = ft_strdup(tmp)))
+	if (!line || !(*line = ft_strdup(tmp)))
 		return (-1);
 	return (*tmp ? 1 : 0);
 }

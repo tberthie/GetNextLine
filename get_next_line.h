@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:51 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/18 13:55:40 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/18 14:58:44 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 32
 
 typedef struct	s_slot
 {
