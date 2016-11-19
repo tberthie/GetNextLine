@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/19 10:11:54 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/19 14:46:37 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ static t_slot	*get_slot(t_slot *first, int fd)
 		slot = slot->next;
 	if (!slot)
 	{
-		if (!(slot = malloc(sizeof(t_slot*))))
+		if (!(slot = malloc(sizeof(t_slot*))) ||
+		!(slot->save = ft_strnew(1)))
 			return (0);
 		slot->fd = fd;
-		slot->save = ft_strnew(0);
 		slot->next = NULL;
 		while (first && first->next)
 			first = first->next;
@@ -38,8 +38,9 @@ static t_slot	*get_slot(t_slot *first, int fd)
 static int		process_slot(t_slot *slot, char **line)
 {
 	char	*tmp;
+	int		ret;
 
-	*line = "";
+	*line = ft_strnew(1);
 	if (*(slot->save++) == '\n')
 		return (1);
 	slot->save--;
@@ -51,6 +52,8 @@ static int		process_slot(t_slot *slot, char **line)
 		*ft_strchr(tmp, '\n') = '\0';
 	if (!(*line = ft_strdup(tmp)))
 		return (-1);
+	ret = *tmp ? 1 : 0;
+	free(tmp);
 	return (*tmp ? 1 : 0);
 }
 
@@ -70,7 +73,8 @@ int				get_next_line(const int fd, char **line)
 			return (-1);
 		first = first ? first : slot;
 		tmp = ft_strncat(ft_strcpy(tmp, slot->save), buff, rd);
-		slot->save = ft_strdup(tmp);
+		if (!(slot->save = ft_strdup(tmp)))
+			return (-1);
 		free(tmp);
 		if (ft_strchr(slot->save, '\n'))
 			return (process_slot(slot, line));
