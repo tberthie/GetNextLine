@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/18 17:03:11 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/19 10:11:54 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int				get_next_line(const int fd, char **line)
 		tmp = ft_strncat(ft_strcpy(tmp, slot->save), buff, rd);
 		slot->save = ft_strdup(tmp);
 		free(tmp);
+		if (ft_strchr(slot->save, '\n'))
+			return (process_slot(slot, line));
 	}
 	return (process_slot(slot, line));
 }
