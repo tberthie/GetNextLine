@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:51 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/18 15:20:24 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/21 16:00:33 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@
 
 # define BUFF_SIZE 32
 
-typedef struct	s_slot
+typedef struct		s_slot
 {
 	int				fd;
 	char			*save;
 	struct s_slot	*next;
-}				t_slot;
+}					t_slot;
 
-int				get_next_line(const int fd, char **line);
+int					get_next_line(const int fd, char **line);
 
 #endif

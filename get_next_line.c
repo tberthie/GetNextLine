@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/16 14:34:43 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/19 15:31:36 by tberthie         ###   ########.fr       */
+/*   Created: 2016/11/21 16:42:16 by tberthie          #+#    #+#             */
+/*   Updated: 2016/11/21 16:42:32 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static t_slot	*get_slot(t_slot *first, int fd)
 		slot = slot->next;
 	if (!slot)
 	{
-		if (!(slot = malloc(sizeof(t_slot*))) ||
-		!(slot->save = ft_strnew(1)))
+		if (!(slot = (t_slot*)malloc(sizeof(t_slot*))))
 			return (0);
 		slot->fd = fd;
 		slot->next = 0;
+		slot->save = 0;
 		while (first && first->next)
 			first = first->next;
 		if (first)
@@ -42,19 +42,25 @@ static int		process_slot(t_slot *slot, char **line)
 
 	if (!(*line = ft_strnew(1)))
 		return (-1);
-	if (*(slot->save++) == '\n')
+	if (*slot->save == '\n')
+	{
+		if (!(tmp = ft_strdup(slot->save + 1)))
+			return (-1);
+		free(slot->save);
+		slot->save = tmp;
 		return (1);
-	slot->save--;
+	}
 	if (!(tmp = ft_strdup(slot->save)))
 		return (-1);
-	slot->save = ft_strchr(tmp, '\n') ? ft_strchr(slot->save, '\n') + 1 :
-	&(slot->save[ft_strlen(slot->save)]);
+	free(slot->save);
+	slot->save = ft_strchr(tmp, '\n') ? ft_strdup(ft_strchr(tmp, '\n') + 1) : 0;
 	if (ft_strchr(tmp, '\n'))
 		*ft_strchr(tmp, '\n') = '\0';
+	free(*line);
 	if (!(*line = ft_strdup(tmp)))
 		return (-1);
 	ret = *tmp ? 1 : 0;
-	ft_strdel(&tmp);
+	free(tmp);
 	return (ret);
 }
 
@@ -68,16 +74,15 @@ int				get_next_line(const int fd, char **line)
 
 	if (!line || !(slot = get_slot(first, fd)))
 		return (-1);
+	first = first ? first : slot;
 	while ((rd = read(fd, buff, BUFF_SIZE)))
 	{
-		if (rd == -1 || !(tmp = ft_strnew(rd +
-		ft_strlen(slot->save) + 1)))
+		if (rd == -1 || !(tmp = ft_strnew(rd + ft_strlen(slot->save))))
 			return (-1);
-		first = first ? first : slot;
 		tmp = ft_strncat(ft_strcpy(tmp, slot->save), buff, rd);
-		if (!(slot->save = ft_strdup(tmp)))
-			return (-1);
-		ft_strdel(&tmp);
+		if (slot->save)
+			free(slot->save);
+		slot->save = tmp;
 		if (ft_strchr(slot->save, '\n'))
 			return (process_slot(slot, line));
 	}
