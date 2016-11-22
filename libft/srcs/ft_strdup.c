@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/09 12:37:27 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/20 16:06:58 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/22 15:41:46 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ char		*ft_strdup(const char *s)
 	char			*str;
 	unsigned int	i;
 
-	if (!(str = (char*)malloc(sizeof(char) * (ft_strlen(s) + 1))))
+	i = ft_strlen(s);
+	if (!(str = (char*)malloc(sizeof(char) * (i + 1))))
 		return (NULL);
-	i = 0;
-	while (*s)
-		str[i++] = *s++;
 	str[i] = '\0';
+	while (i-- > 0)
+		str[i] = s[i];
 	return (str);
 }

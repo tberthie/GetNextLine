@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/16 14:34:51 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/21 16:00:33 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/22 10:51:29 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 
 typedef struct		s_slot
 {
-	int				fd;
 	char			*save;
+	int				fd;
 	struct s_slot	*next;
 }					t_slot;
 
