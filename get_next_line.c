@@ -6,7 +6,7 @@
 /*   By: tberthie <tberthie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/21 16:42:16 by tberthie          #+#    #+#             */
-/*   Updated: 2016/11/22 16:24:34 by tberthie         ###   ########.fr       */
+/*   Updated: 2016/11/22 17:43:54 by tberthie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ static t_slot	*get_slot(t_slot *first, int fd)
 		slot = slot->next;
 	if (!slot)
 	{
-		if (!(slot = (t_slot*)malloc(sizeof(t_slot*))) ||
-		!(slot->next = (t_slot*)malloc(sizeof(t_slot*))) ||
-		!(slot->save = ft_strnew(1)))
+		if (!(slot = malloc(sizeof(t_slot))) ||
+		!(slot->save = ft_strnew(0)))
 			return (0);
 		slot->fd = fd;
 		slot->next = NULL;
@@ -49,14 +48,16 @@ static int		process_slot(t_slot *slot, char **line)
 		if (!(slot->save = ft_strdup(tmp + 1)))
 			return (-1);
 		free(tmp);
-		*line = ft_strnew(1);
+		*line = ft_strnew(0);
 		return (1);
 	}
-	slot->save = ft_strchr(tmp, '\n') ?
-	ft_strdup(ft_strchr(tmp, '\n') + 1) : ft_strnew(1);
+	if (!(slot->save = ft_strchr(tmp, '\n') ?
+	ft_strdup(ft_strchr(tmp, '\n') + 1) : ft_strnew(0)))
+		return (-1);
 	if (ft_strchr(tmp, '\n'))
 		*ft_strchr(tmp, '\n') = '\0';
-	new = *tmp ? tmp : ft_strnew(1);
+	if (!(new = *tmp ? tmp : ft_strnew(0)))
+		return (-1);
 	*line = new;
 	if (new != tmp)
 		free(tmp);
